@@ -14,3 +14,12 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build da Imagem Docker
+      uses: docker/build-push-action@v6.9.0
+      with:
+        context: ./src
+        file: ./src/Dockerfile 
+        push: true
+        tags: |
+          vento123/aula-primeira-pipeline:v${{ github.run_number }}
+          vento123/aula-primeira-pipeline:latest
