@@ -37,20 +37,19 @@ jobs:
         exec -l $SHELL
         gcloud components install gke-gcloud-auth-plugin
 
-    - name: Set up GKE credentials
-      run: |
-        gcloud auth login
-        gcloud container clusters get-credentials app-01-cluster --zone us-west1 --project cd-k8s-gcp-442415
-      
-      # - name: Configuração do contexto to kubernetes
-      #   uses: azure/k8s-set-context@v4.0.0
-      #   with:
-        #     method: kubeconfig
-        #     kubeconfig: ${{ secrets.K8S_CONFIG }}
-        # - name: Execução do Manifesto
-        #   uses: Azure/k8s-deploy@v5
-        #   with:
-          #     manifests: |
-          #         ./k8s/deployment.yaml
-          #     images: |
-          #       vento123/aula-primeira-pipeline:v${{ github.run_number }}
+    # - name: Set up GKE credentials
+    #   run: gcloud container clusters get-credentials app-01-cluster --zone us-west1-a --project cd-k8s-gcp-442415
+    
+    - name: Configuração do contexto to kubernetes
+      uses: azure/k8s-set-context@v4.0.0
+      with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
+
+    - name: Execução do Manifesto
+      uses: Azure/k8s-deploy@v5
+      with:
+          manifests: |
+              ./k8s/deployment.yaml
+          images: |
+            vento123/aula-primeira-pipeline:v${{ github.run_number }}
