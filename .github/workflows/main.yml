@@ -25,6 +25,7 @@ jobs:
           vento123/aula-primeira-pipeline:latest
   CD:
       runs-on: ubuntu-latest
+      needs: [CI]
       steps:
         - name: Checkout code
           uses: actions/checkout@v2
