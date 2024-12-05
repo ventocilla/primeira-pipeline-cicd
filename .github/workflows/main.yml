@@ -39,7 +39,7 @@ jobs:
 
     - name: Set up GKE credentials
       run: |
-        ech "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
+        echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
         gcloud auth activate-service-account --key-file /tmp/gcp-key.json
         gcloud container clusters get-credentials  app-01-cluster   --zone ZONE --project cd-k8s-gcp-442415
 
