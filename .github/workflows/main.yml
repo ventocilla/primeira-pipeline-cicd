@@ -38,6 +38,10 @@ jobs:
             # project_id: cd-k8s-gcp-442415
             export_default_credentials: true
 
+        - name: Configure kubectl
+          run: |
+            gcloud container clusters get-credentials app-01-cluster --zone us-west1-a --project cd-k8s-gcp-442415
+
         - name: Install gke-gcloud-auth-plugin
           run: |
             gcloud components install gke-gcloud-auth-plugin
