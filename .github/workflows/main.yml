@@ -39,19 +39,18 @@ jobs:
 
     - name: Set up GKE credentials
       run: |
-        echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
         gcloud auth activate-service-account --key-file /tmp/gcp-key.json
         gcloud container clusters get-credentials  app-01-cluster   --zone ZONE --project cd-k8s-gcp-442415
 
-    - name: Configuração do contexto to kubernetes
-      uses: azure/k8s-set-context@v4.0.0
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ secrets.K8S_CONFIG }}
-    - name: Execução do Manifesto
-      uses: Azure/k8s-deploy@v5
-      with:
-        manifests: |
-            ./k8s/deployment.yaml
-        images: |
-          vento123/aula-primeira-pipeline:v${{ github.run_number }}
+    # - name: Configuração do contexto to kubernetes
+    #   uses: azure/k8s-set-context@v4.0.0
+    #   with:
+    #     method: kubeconfig
+    #     kubeconfig: ${{ secrets.K8S_CONFIG }}
+    # - name: Execução do Manifesto
+    #   uses: Azure/k8s-deploy@v5
+    #   with:
+    #     manifests: |
+    #         ./k8s/deployment.yaml
+    #     images: |
+    #       vento123/aula-primeira-pipeline:v${{ github.run_number }}
