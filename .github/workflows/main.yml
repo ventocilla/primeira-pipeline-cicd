@@ -29,6 +29,20 @@ jobs:
     steps:
     - name: Obtendo o código
       uses: actions/checkout@v4.2.2
+
+    - name: Install gcloud and gke-gcloud-auth-plugin
+      run: |
+        echo "Installing gcloud SDK..."
+        curl -sSL https://sdk.cloud.google.com | bash
+        exec -l $SHELL
+        gcloud components install gke-gcloud-auth-plugin
+
+    - name: Set up GKE credentials
+      run: |
+        echo "${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
+        gcloud auth activate-service-account --key-file /tmp/gcp-key.json
+        gcloud container clusters get-credentials  app-01-cluster   --zone ZONE --project cd-k8s-gcp-442415
+
     - name: Configuração do contexto to kubernetes
       uses: azure/k8s-set-context@v4.0.0
       with:
