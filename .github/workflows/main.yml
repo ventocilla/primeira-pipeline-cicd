@@ -39,7 +39,7 @@ jobs:
 
         - name: Configure kubectl
           run: |
-            gcloud container clusters get-credentials app-01-cluster --zone us-west1-a --project cd-k8s-gcp-442415
+            gcloud container clusters get-credentials app-01-cluster --zone us-east1-b --project cd-k8s-gcp-444323
 
         - name: Install gke-gcloud-auth-plugin
           run: |
