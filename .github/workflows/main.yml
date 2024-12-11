@@ -38,8 +38,7 @@ jobs:
             export_default_credentials: true
 
         - name: Configure kubectl
-          run: |
-            gcloud container clusters get-credentials app-01-cluster --zone us-east1-b --project cd-k8s-gcp-444323
+          run: gcloud container clusters get-credentials app-01-cluster --zone us-east1-b --project cd-k8s-gcp-444323 
 
         - name: Install gke-gcloud-auth-plugin
           run: |
