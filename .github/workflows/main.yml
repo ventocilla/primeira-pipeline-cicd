@@ -23,21 +23,26 @@ jobs:
         tags: |
           vento123/aula-primeira-pipeline:v${{ github.run_number }}
           vento123/aula-primeira-pipeline:latest
-  # CD:
-  #     runs-on: ubuntu-latest
-  #     needs: [CI]
-  #     steps:
-  #       # Autenticação no GCP
-  #       - name: Checkout code
-  #         uses: actions/checkout@v2
+  CD:
+      runs-on: ubuntu-latest
+      needs: [CI]
+      steps:
+        # Download do código
+        - name: Checkout code
+          uses: actions/checkout@v4.2.2
 
-  #       # Autenticação no GCP
-        
-  #       # Deploy no Kubernetes usando Azure K8s Deploy
-  #       - name: Execução do Manifesto
-  #         uses: Azure/k8s-deploy@v5
-  #         with:
-  #           manifests: |
-  #             ./k8s/deployment.yaml
-  #           images: |
-  #             vento123/aula-primeira-pipeline:v${{ github.run_number }}
+        # Configuração do kubeconfig
+        - name: Configuração do contexto to kubernetes
+          uses: azure/k8s-set-context@v4.0.0
+          with:
+              method: kubeconfig
+              kubeconfig: ${{ secrets.K8S_CONFIG }}
+
+        # Deploy no Kubernetes usando Azure K8s Deploy (kubectl apply)
+        - name: Execução do Manifesto
+          uses: Azure/k8s-deploy@v5
+          with:
+            manifests: |
+              ./k8s/deployment.yaml
+            images: |
+              vento123/aula-primeira-pipeline:v${{ github.run_number }}
