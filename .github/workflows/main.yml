@@ -24,61 +24,55 @@ jobs:
           vento123/aula-primeira-pipeline:v${{ github.run_number }}
           vento123/aula-primeira-pipeline:latest
   CD:
-    runs-on: ubuntu-latest
     needs: [CI]
-    steps:
-    # Download do código
-    - name: Checkout código
-      uses: actions/checkout@v4.2.2
+    uses: ventocilla/primeira-pipeline-cicd/.github/workflows/deploy.yml@main
+    with:
+      manifests: ./k8s/deployment.yaml
+      images: vento123/aula-primeira-pipeline:v${{ github.run_number }}
+    secrets: inherit
 
-    # Autenticação no GCP
-    - name: Autenticação no GCP
-      uses: 'google-github-actions/auth@v2'
-      with:
-        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
+  
+  # --------
+  # CD:
+  #   runs-on: ubuntu-latest
+  #   needs: [CI]
+  #   steps:
+  #   # Download do código
+  #   - name: Checkout código
+  #     uses: actions/checkout@v4.2.2
 
-    # Configurar Google Cloud SDK
-    - name: Configurar Google Cloud SDK
-      uses: 'google-github-actions/setup-gcloud@v2'
-      with:
-        version: 'latest'
+  #   # Autenticação no GCP
+  #   - name: Autenticação no GCP
+  #     uses: 'google-github-actions/auth@v2'
+  #     with:
+  #       credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
 
-    # Instalar gke-gcloud-auth-plugin
-    - name: Instalar gke-gcloud-auth-plugin
-      run: |
-       curl -sfL https://sdk.cloud.google.com | bash
-       source ~/.bashrc
-       gcloud components install gke-gcloud-auth-plugin
+  #   # Configurar Google Cloud SDK
+  #   - name: Configurar Google Cloud SDK
+  #     uses: 'google-github-actions/setup-gcloud@v2'
+  #     with:
+  #       version: 'latest'
 
-    # Configurar credenciais do Kubernetes
-    - name: Configurar credenciais do Cluster GKE
-      run: |
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
-          --zone ${{ secrets.GKE_ZONE }} \
-          --project ${{ secrets.GCP_PROJECT_ID }}
+  #   # Instalar gke-gcloud-auth-plugin
+  #   - name: Instalar gke-gcloud-auth-plugin
+  #     run: |
+  #      curl -sfL https://sdk.cloud.google.com | bash
+  #      source ~/.bashrc
+  #      gcloud components install gke-gcloud-auth-plugin
 
-    # Deploy no Kubernetes
-    - name: Deploy no Kubernetes
-      uses: Azure/k8s-deploy@v5
-      with:
-        manifests: |
-          ./k8s/deployment.yaml
-        images: |
-          vento123/aula-primeira-pipeline:v${{ github.run_number }}
-        strategy: blue-green
+  #   # Configurar credenciais do Kubernetes
+  #   - name: Configurar credenciais do Cluster GKE
+  #     run: |
+  #       gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+  #         --zone ${{ secrets.GKE_ZONE }} \
+  #         --project ${{ secrets.GCP_PROJECT_ID }}
 
-    # Verificar status do deployment
-    # - name: Verificar Status do Deployment
-    #   run: |
-    #     kubectl rollout status deployment/meu-app-deployment
-    #     kubectl get deployments
-
-    # Verificar status do deployment
-    # - name: Verificar Status do Deployment
-    #   uses: 'google-github-actions/setup-gcloud@v2'
-    #   with:
-    #     version: 'latest'
-    #   run: |
-    #     gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
-    #     kubectl rollout status deployment/meu-app-deployment
-    #     kubectl get deployments
+  #   # Deploy no Kubernetes
+  #   - name: Deploy no Kubernetes
+  #     uses: Azure/k8s-deploy@v5
+  #     with:
+  #       manifests: |
+  #         ./k8s/deployment.yaml
+  #       images: |
+  #         vento123/aula-primeira-pipeline:v${{ github.run_number }}
+  #       strategy: blue-green

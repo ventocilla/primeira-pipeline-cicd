@@ -1,0 +1,58 @@
+name: Deploy no Kubernetes
+on:
+    workflow_call:
+        inputs:
+            manifests:
+                type: string
+                required: true
+                description: "Arquivos de manifesto para deploy"
+            images:
+                type: string
+                required: true
+                description: "Imagens que serão alteradas nos manifestos"
+
+jobs:
+    deploy-k8s:
+        runs-on: ubuntu-latest
+        steps:
+        # Download do código
+        - name: Checkout código
+          uses: actions/checkout@v4.2.2
+
+        # Autenticação no GCP
+        - name: Autenticação no GCP
+          uses: 'google-github-actions/auth@v2'
+          with:
+            credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}'
+
+        # Configurar Google Cloud SDK
+        - name: Configurar Google Cloud SDK
+          uses: 'google-github-actions/setup-gcloud@v2'
+          with:
+            version: 'latest'
+
+        # Instalar gke-gcloud-auth-plugin
+        - name: Instalar gke-gcloud-auth-plugin
+          run: |
+            curl -sfL https://sdk.cloud.google.com | bash
+            source ~/.bashrc
+            gcloud components install gke-gcloud-auth-plugin
+
+        # Configurar credenciais do Kubernetes
+        - name: Configurar credenciais do Cluster GKE
+          run: |
+            gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} \
+            --zone ${{ secrets.GKE_ZONE }} \
+            --project ${{ secrets.GCP_PROJECT_ID }}
+
+        # Deploy no Kubernetes
+        - name: Deploy no Kubernetes
+          uses: Azure/k8s-deploy@v5
+          with:
+            # manifests: |
+            #   ./k8s/deployment.yaml
+            manifests: ${{inputs.manifests}}
+            # images: |
+            #   vento123/aula-primeira-pipeline:v${{ github.run_number }}
+            images: ${{inputs.images}}
+            strategy: blue-green
