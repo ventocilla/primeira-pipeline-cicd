@@ -43,6 +43,13 @@ jobs:
       with:
         version: 'latest'
 
+    # Instalar gke-gcloud-auth-plugin
+    - name: Instalar gke-gcloud-auth-plugin
+      run: |
+       curl -sfL https://sdk.cloud.google.com | bash
+       source ~/.bashrc
+       gcloud components install gke-gcloud-auth-plugin
+
     # Configurar credenciais do Kubernetes
     - name: Configurar credenciais do Cluster GKE
       run: |
