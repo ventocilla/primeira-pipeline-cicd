@@ -67,8 +67,18 @@ jobs:
           vento123/aula-primeira-pipeline:v${{ github.run_number }}
         strategy: blue-green
 
-    # # Verificar status do deployment
+    # Verificar status do deployment
+    - name: Verificar Status do Deployment
+      run: |
+        kubectl rollout status deployment/deployment
+        kubectl get deployments
+
+    # Verificar status do deployment
     # - name: Verificar Status do Deployment
+    #   uses: 'google-github-actions/setup-gcloud@v2'
+    #   with:
+    #     version: 'latest'
     #   run: |
+    #     gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
     #     kubectl rollout status deployment/meu-app-deployment
     #     kubectl get deployments
