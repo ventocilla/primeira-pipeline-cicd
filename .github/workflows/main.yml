@@ -68,10 +68,10 @@ jobs:
         strategy: blue-green
 
     # Verificar status do deployment
-    - name: Verificar Status do Deployment
-      run: |
-        kubectl rollout status deployment/deployment
-        kubectl get deployments
+    # - name: Verificar Status do Deployment
+    #   run: |
+    #     kubectl rollout status deployment/meu-app-deployment
+    #     kubectl get deployments
 
     # Verificar status do deployment
     # - name: Verificar Status do Deployment
