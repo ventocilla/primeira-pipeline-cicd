@@ -67,8 +67,8 @@ jobs:
           vento123/aula-primeira-pipeline:v${{ github.run_number }}
         strategy: blue-green
 
-    # Verificar status do deployment
-    - name: Verificar Status do Deployment
-      run: |
-        kubectl rollout status deployment/meu-app-deployment
-        kubectl get deployments
+    # # Verificar status do deployment
+    # - name: Verificar Status do Deployment
+    #   run: |
+    #     kubectl rollout status deployment/meu-app-deployment
+    #     kubectl get deployments
