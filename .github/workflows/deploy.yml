@@ -55,4 +55,4 @@ jobs:
             # images: |
             #   vento123/aula-primeira-pipeline:v${{ github.run_number }}
             images: ${{inputs.images}}
-            strategy: blue-green
+            # strategy: blue-green
